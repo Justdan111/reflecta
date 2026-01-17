@@ -83,7 +83,7 @@ export default function HomeScreen() {
         <Text className="text-lg font-semibold text-[#E5E5E5] mb-4">This Week</Text>
         <View className="gap-3 mb-6">
           <Pressable
-            onPress={() => router.push("/weekly")}
+            onPress={() => router.push("/")}
             className="bg-[#1E1E1E] rounded-xl p-4 border border-[#2A2A2A] flex-row justify-between items-center active:opacity-70"
           >
             <Text className="text-[#9A9A9A]">View Weekly Summary</Text>

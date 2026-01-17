@@ -1,6 +1,5 @@
 import { Tabs } from "expo-router"
 import React from "react"
-import { House, BookOpen, TrendingUp, Settings } from "react-native-feather"
 import { Ionicons } from "@expo/vector-icons";
 import Animated, { useSharedValue, withTiming, useAnimatedStyle } from "react-native-reanimated";
 
