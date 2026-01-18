@@ -22,17 +22,21 @@ export default function InsightsScreen() {
   return (
     <SafeAreaView className="flex-1 bg-[#121212]">
       <ScrollView className="flex-1 px-6 py-4 gap-4">
-         <Animated.View 
-                  entering={FadeIn.duration(600)}
-                  className="flex-row gap-6 items-center mb-6"
-                >
-                  <Pressable onPress={() => router.back()}>
-                    <ChevronLeft color="#E5E5E5"  />
-                  </Pressable>
-                  <Text className="text-[#9A9A9A] text-lg font-semibold tracking-widest ">
-                    REFLECTA
-                  </Text>
-                </Animated.View>
+        <Animated.View 
+          entering={FadeIn.duration(600)}
+          className="flex-row items-center mb-6 relative"
+        >
+          <Pressable 
+            onPress={() => router.back()} 
+            className="absolute left-0"
+            style={{ zIndex: 1 }}
+          >
+            <ChevronLeft color="#E5E5E5" />
+          </Pressable>
+          <Text className="flex-1 text-center text-[#9A9A9A] text-lg font-semibold tracking-widest">
+            REFLECTA
+          </Text>
+        </Animated.View>
 
         {/* Mood Distribution */}
         <View className="mt-2 mb-6">
@@ -70,7 +74,7 @@ export default function InsightsScreen() {
             title="Exercise correlates with higher mood"
             description="On days you logged physical activity, your baseline mood was significantly higher than inactive days."
             buttonText="View Details"
-            onPress={() => console.log('View details')}
+              onPress={() => router.push("/weekly")}
                 />
           </View>
      

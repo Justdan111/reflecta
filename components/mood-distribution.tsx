@@ -8,6 +8,7 @@ import Animated, {
   withDelay,
 } from "react-native-reanimated"
 import { useEffect } from "react"
+import { useRouter } from "expo-router"
 
 interface Mood {
   day: string
@@ -21,6 +22,8 @@ interface MoodDistributionProps {
 }
 
 export function MoodDistribution({ moods, onExplore }: MoodDistributionProps) {
+    const router = useRouter()
+    
   const MOODS = moods || [
     { day: "Mon", value: 65, color: "#6D5D8B" },
     { day: "Tue", value: 80, color: "#6D5D8B" },
@@ -65,7 +68,7 @@ export function MoodDistribution({ moods, onExplore }: MoodDistributionProps) {
 
       {/* Explore Button */}
       <Pressable 
-        onPress={onExplore}
+       onPress={() => router.push("/weekly")}
         className="bg-[#6D5D8B] py-4 rounded-2xl active:opacity-80"
       >
         <Text className="text-white text-center font-semibold text-base">
