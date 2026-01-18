@@ -141,7 +141,7 @@ export default function HomeScreen() {
             <View className="gap-3 mb-6">
               <Animated.View entering={FadeInUp.duration(500).delay(500)}>
                 <Pressable
-                  onPress={() => router.push("/")}
+                  onPress={() => router.push("/weekly")}
                   className="bg-[#1E1E1E] rounded-xl p-4 border border-[#2A2A2A] flex-row justify-between items-center active:opacity-70"
                 >
                   <Text className="text-[#9A9A9A]">View Weekly Summary</Text>

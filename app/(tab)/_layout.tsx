@@ -53,6 +53,13 @@ export default function TabsLayout() {
           ),
         }}
       />
+       <Tabs.Screen
+            name="weekly"
+            options={{
+              title: "Weekly",
+              href: null, // Hidden from tab bar
+            }}
+          />
       <Tabs.Screen
         name="insights"
         options={{

@@ -52,7 +52,7 @@ export default function InsightsScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-[#121212]">
-      <ScrollView className="flex-1 px-6 py-4">
+      <ScrollView className="flex-1 px-6 py-4 gap-4">
         <Animated.Text 
           entering={FadeIn.duration(600)}
           className="text-2xl font-bold text-[#E5E5E5] mb-8"
@@ -61,18 +61,34 @@ export default function InsightsScreen() {
         </Animated.Text>
 
         {/* Mood Distribution */}
+        <View className="mt-2 mb-6">
         <Animated.Text 
           entering={SlideInRight.duration(600).delay(200)}
-          className="text-lg font-semibold text-[#E5E5E5] mb-4"
+          className="text-xl font-semibold text-[#E5E5E5] mb-2 "
         >
-          Your Patterns
+          Weekly Rhythm
+        </Animated.Text>
+        <Animated.Text 
+          entering={SlideInRight.duration(600).delay(200)}
+          className="  text-[#9A9A9A] mb-4"
+        >
+          MOOD DISTRIBUTION
         </Animated.Text>
         
         <Animated.View entering={FadeInDown.duration(700).delay(300)}>
           <MoodDistribution  />
         </Animated.View>
+         </View>
 
         {/* Mood Uplift Stat */}
+          <View>
+             <Animated.Text 
+          entering={SlideInRight.duration(600).delay(200)}
+          className="text-xl font-semibold text-[#E5E5E5] mb-4 "
+        >
+          Activity Insights
+        </Animated.Text>
+
         <StatCard
             value="+24%"
             label="MOOD UPLIFT"
@@ -82,6 +98,8 @@ export default function InsightsScreen() {
             buttonText="View Details"
             onPress={() => console.log('View details')}
                 />
+          </View>
+     
 
 
         {/* Weekly Rhythm */}
@@ -96,14 +114,14 @@ export default function InsightsScreen() {
             <View className="flex-row items-start gap-3">
               <Animated.Text 
                 entering={ZoomIn.duration(500).delay(700)}
-                className="text-2xl"
+                className="text-3xl"
               >
                 💡
               </Animated.Text>
               <View className="flex-1">
                 <Animated.Text 
                   entering={FadeInRight.duration(600).delay(800)}
-                  className="text-[#E5E5E5] italic text-sm font-medium"
+                  className="text-[#E5E5E5] italic text-lg font-medium"
                 >
                   &quot;Do these patterns resonate with you today?&quot;
                 </Animated.Text>
