@@ -51,7 +51,7 @@ export default function WeeklyScreen() {
           <Pressable onPress={() => router.back()}>
             <ChevronLeft color="#E5E5E5"  />
           </Pressable>
-          <Text className="text-[#9A9A9A] text-xs font-semibold tracking-widest">
+          <Text className="text-[#9A9A9A] text-lg font-semibold tracking-widest">
             REFLECTA
           </Text>
           <Pressable>

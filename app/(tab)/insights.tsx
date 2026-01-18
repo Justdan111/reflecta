@@ -6,59 +6,33 @@ import Animated, {
   FadeIn,
   FadeInDown,
   FadeInUp,
-  FadeInLeft,
   FadeInRight,
   ZoomIn,
   SlideInRight,
-  useAnimatedStyle,
-  useSharedValue,
-  withSequence,
-  withSpring,
-  withTiming,
 } from "react-native-reanimated"
 import { MoodDistribution } from "@/components/mood-distribution"
 import { StatCard } from "@/components/stat-card"
-
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
-
+import { ChevronLeft } from "react-native-feather"
 
 
 export default function InsightsScreen() {
   const router = useRouter()
-  const upliftCardScale = useSharedValue(1)
-  const detailsButtonScale = useSharedValue(1)
 
-  const handleUpliftCardPress = () => {
-    upliftCardScale.value = withSequence(
-      withTiming(0.98, { duration: 100 }),
-      withSpring(1, { damping: 10, stiffness: 200 })
-    )
-  }
-
-  const handleDetailsPress = () => {
-    detailsButtonScale.value = withSequence(
-      withTiming(0.95, { duration: 100 }),
-      withSpring(1, { damping: 8, stiffness: 200 })
-    )
-  }
-
-  const upliftCardAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: upliftCardScale.value }],
-  }))
-
-  const detailsButtonAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: detailsButtonScale.value }],
-  }))
 
   return (
     <SafeAreaView className="flex-1 bg-[#121212]">
       <ScrollView className="flex-1 px-6 py-4 gap-4">
-        <Animated.Text 
-          entering={FadeIn.duration(600)}
-          className="text-2xl font-bold text-[#E5E5E5] mb-8"
-        >
-          Personal Insights
-        </Animated.Text>
+         <Animated.View 
+                  entering={FadeIn.duration(600)}
+                  className="flex-row gap-6 items-center mb-6"
+                >
+                  <Pressable onPress={() => router.back()}>
+                    <ChevronLeft color="#E5E5E5"  />
+                  </Pressable>
+                  <Text className="text-[#9A9A9A] text-lg font-semibold tracking-widest ">
+                    REFLECTA
+                  </Text>
+                </Animated.View>
 
         {/* Mood Distribution */}
         <View className="mt-2 mb-6">

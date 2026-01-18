@@ -1,6 +1,6 @@
 import { View, Text, ScrollView, Pressable } from "react-native"
 import { useRouter } from "expo-router"
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import { Bookmark, Settings as SettingsIcon } from "react-native-feather"
 import { SafeAreaView } from "react-native-safe-area-context"
 import Animated, {
@@ -74,11 +74,11 @@ export default function HomeScreen() {
           className="flex-row justify-between items-center mb-8"
         >
           <Pressable onPress={() => router.push("/settings")}>
-            <SettingsIcon color="#6D5D8B" />
+            <SettingsIcon color="#E5E5E5" />
           </Pressable>
           <Text className="text-2xl font-bold text-[#E5E5E5]">Reflecta</Text>
           <Pressable onPress={() => router.push("/journal")}>
-            <Bookmark color="#6D5D8B" />
+            <Bookmark color="#E5E5E5" />
           </Pressable>
         </Animated.View>
 

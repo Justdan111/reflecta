@@ -58,11 +58,11 @@ export default function JournalScreen() {
           className="flex-row justify-between items-center mb-10"
         >
           <Pressable onPress={() => router.push("/journal")}> 
-            <ArrowLeft color="#6D5D8B" />
+            <ArrowLeft color="#E5E5E5" />
           </Pressable>
           <Text className="text-2xl font-bold text-[#E5E5E5] flex-1 text-center">Daily Note</Text>
           <Pressable onPress={() => {/* open menu logic here */}}>
-            <MoreHorizontal color="#6D5D8B" />
+            <MoreHorizontal color="#E5E5E5" />
           </Pressable>
         </Animated.View>
 
