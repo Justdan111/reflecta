@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, SafeAreaView, Pressable } from "react-native"
+import { View, Text, ScrollView,  Pressable } from "react-native"
 import { ChevronLeft, Share2 } from "react-native-feather"
 import { useRouter } from "expo-router"
 import { StatsCard } from "@/components/stats-card"
@@ -12,6 +12,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated"
+import { SafeAreaView } from "react-native-safe-area-context"
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 

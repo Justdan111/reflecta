@@ -1,5 +1,5 @@
 
-import { View, Text, ScrollView, SafeAreaView, Pressable } from "react-native"
+import { View, Text, ScrollView, Pressable } from "react-native"
 import { useRouter } from "expo-router"
 
 import Animated, {
@@ -13,6 +13,7 @@ import Animated, {
 import { MoodDistribution } from "@/components/mood-distribution"
 import { StatCard } from "@/components/stat-card"
 import { ChevronLeft } from "react-native-feather"
+import { SafeAreaView } from "react-native-safe-area-context"
 
 
 export default function InsightsScreen() {
