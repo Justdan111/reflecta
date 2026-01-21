@@ -1,8 +1,7 @@
-import { View, Text, ScrollView, Pressable } from "react-native"
+import { View, Text, ScrollView, Pressable, SafeAreaView } from "react-native"
 import { useRouter } from "expo-router"
 import { useState } from "react"
 import { Bookmark, Settings as SettingsIcon } from "react-native-feather"
-import { SafeAreaView } from "react-native-safe-area-context"
 import Animated, {
   FadeIn,
   FadeInDown,

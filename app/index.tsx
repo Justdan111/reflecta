@@ -1,9 +1,9 @@
 
-import { View, Text,  ScrollView, Pressable } from "react-native"
+import { View, Text,  ScrollView, Pressable, SafeAreaView } from "react-native"
 import { useRouter } from "expo-router"
 import { X, HelpCircle } from "react-native-feather"
 import { useState } from "react"
-import { SafeAreaView } from "react-native-safe-area-context"
+
 
 const MOODS = [
   { id: 1, emoji: "✨", label: "Radiant", description: "Feeling energized" },
@@ -65,7 +65,7 @@ export default function MoodSelectionScreen() {
         {/* Continue Button */}
         <Pressable
           className={`py-4 px-6 rounded-xl mb-4 ${selectedMood ? "bg-[#6D5D8B]" : "bg-[#2A2A2A]"}`}
-          disabled={!selectedMood}
+          disabled={!selectedMood} onPress={() => router.push("/journal")}
         >
           <Text className={`text-center font-semibold text-lg ${selectedMood ? "text-white" : "text-[#666666]"}`}>
             Continue

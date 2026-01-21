@@ -1,7 +1,6 @@
-import { View, Text, ScrollView, TextInput, Pressable } from "react-native"
+import { View, Text, ScrollView, TextInput, Pressable, SafeAreaView } from "react-native"
 import { ArrowLeft, CheckCircle, MoreHorizontal } from "react-native-feather"
 import { useState } from "react"
-import { SafeAreaView } from "react-native-safe-area-context"
 import { useRouter } from "expo-router"
 import Animated, {
   FadeIn,
@@ -57,7 +56,7 @@ export default function JournalScreen() {
           entering={FadeIn.duration(500)}
           className="flex-row justify-between items-center mb-10"
         >
-          <Pressable onPress={() => router.push("/journal")}> 
+          <Pressable onPress={() => router.back()}> 
             <ArrowLeft color="#E5E5E5" />
           </Pressable>
           <Text className="text-2xl font-bold text-[#E5E5E5] flex-1 text-center">Daily Note</Text>

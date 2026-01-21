@@ -1,4 +1,4 @@
-import { View, Text, ScrollView,  Pressable, Switch } from "react-native"
+import { View, Text, ScrollView,  Pressable, Switch, SafeAreaView } from "react-native"
 import { useState } from "react"
 import { ChevronLeft, ChevronRight, Trash2 } from "react-native-feather"
 import { useRouter } from "expo-router"
@@ -11,7 +11,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated"
-import { SafeAreaView } from "react-native-safe-area-context"
+
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
