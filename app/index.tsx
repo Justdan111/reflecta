@@ -1,8 +1,9 @@
 
-import { View, Text, SafeAreaView, TextInput, Pressable, ScrollView } from "react-native"
+import { View, Text, TextInput, Pressable, ScrollView } from "react-native"
 import { useRouter } from "expo-router"
 import { X } from "react-native-feather"
 import { useState } from "react"
+import { SafeAreaView } from "react-native-safe-area-context"
 
 export default function DailyNoteScreen() {
   const router = useRouter()
@@ -15,7 +16,7 @@ export default function DailyNoteScreen() {
         <View className="flex-row justify-between items-center mb-8">
           <Text className="text-2xl font-bold text-[#E5E5E5]">Daily Note</Text>
           <Pressable onPress={() => router.back()}>
-            <X color="#6D5D8B" size={28} />
+            <X color="#6D5D8B"  />
           </Pressable>
         </View>
 
