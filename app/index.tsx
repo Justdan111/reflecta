@@ -32,7 +32,7 @@ export default function MoodSelectionScreen() {
 
         {/* Title */}
         <View className="mb-8">
-          <Text className="text-3xl font-bold text-[#E5E5E5] mb-2">What's your mood</Text>
+          <Text className="text-3xl font-bold text-[#E5E5E5] mb-2">What&apos;s your mood</Text>
           <Text className="text-3xl font-bold text-[#C9A24D] italic">right now?</Text>
         </View>
 
@@ -56,7 +56,7 @@ export default function MoodSelectionScreen() {
         {selectedMood && (
           <View className="bg-[#1E1E1E] rounded-xl p-4 border border-[#2A2A2A] mb-8">
             <Text className="text-[#9A9A9A] text-sm mb-2">
-              You're feeling {MOODS.find((m) => m.id === selectedMood)?.label.toLowerCase()} today.
+              You&apos;re feeling {MOODS.find((m) => m.id === selectedMood)?.label.toLowerCase()} today.
             </Text>
             <Text className="text-[#9A9A9A] text-sm">{MOODS.find((m) => m.id === selectedMood)?.description}</Text>
           </View>
