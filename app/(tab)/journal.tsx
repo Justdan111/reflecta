@@ -71,22 +71,56 @@ export default function JournalScreen() {
             <ArrowLeft color="#E5E5E5" />
           </Pressable>
           <Text className="text-2xl font-bold text-[#E5E5E5] flex-1 text-center">Daily Note</Text>
-          <View>
-            <Pressable onPress={() => setMenuVisible(true)}>
+          <View style={{ position: 'relative' }}>
+            <Pressable onPress={() => setMenuVisible((v) => !v)}>
               <MoreHorizontal color="#E5E5E5" />
             </Pressable>
             {menuVisible && (
-              <View style={{ position: 'absolute', top: 30, right: 0, zIndex: 10, backgroundColor: '#232323', borderRadius: 10, borderWidth: 1, borderColor: '#2A2A2A', minWidth: 120, shadowColor: '#000', shadowOpacity: 0.2, shadowRadius: 8, elevation: 5 }}>
-                <Pressable onPress={() => handleMenuOption('Edit')} style={{ padding: 12 }}>
-                  <Text style={{ color: '#E5E5E5', fontSize: 16 }}>Edit</Text>
-                </Pressable>
-                <Pressable onPress={() => handleMenuOption('Delete')} style={{ padding: 12 }}>
-                  <Text style={{ color: '#E57373', fontSize: 16 }}>Delete</Text>
-                </Pressable>
-                <Pressable onPress={() => setMenuVisible(false)} style={{ padding: 12 }}>
-                  <Text style={{ color: '#9A9A9A', fontSize: 16 }}>Cancel</Text>
-                </Pressable>
-              </View>
+              <>
+                {/* Overlay to close menu when clicking outside */}
+                <Pressable
+                  onPress={() => setMenuVisible(false)}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    width: '200vw',
+                    height: '200vh',
+                    backgroundColor: 'rgba(0,0,0,0.01)',
+                    zIndex: 19,
+                  }}
+                />
+                <View
+                  style={{
+                    position: 'absolute',
+                    top: 30,
+                    right: 0,
+                    zIndex: 20,
+                    backgroundColor: '#000',
+                    borderRadius: 12,
+                    borderWidth: 1,
+                    borderColor: '#2A2A2A',
+                    minWidth: 130,
+                    shadowColor: '#000',
+                    shadowOpacity: 0.4,
+                    shadowRadius: 16,
+                    shadowOffset: { width: 0, height: 8 },
+                    elevation: 30,
+                  }}
+                >
+                  <Pressable onPress={() => handleMenuOption('Edit')} style={{ padding: 14 }}>
+                    <Text style={{ color: '#E5E5E5', fontSize: 16 }}>Edit</Text>
+                  </Pressable>
+                  <Pressable onPress={() => handleMenuOption('Delete')} style={{ padding: 14 }}>
+                    <Text style={{ color: '#E57373', fontSize: 16 }}>Delete</Text>
+                  </Pressable>
+                  <Pressable onPress={() => setMenuVisible(false)} style={{ padding: 14 }}>
+                    <Text style={{ color: '#9A9A9A', fontSize: 16 }}>Cancel</Text>
+                  </Pressable>
+                </View>
+              </>
             )}
           </View>
         </Animated.View>
