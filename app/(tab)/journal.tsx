@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TextInput, Pressable, SafeAreaView } from "react-native"
+import { View, Text, ScrollView, TextInput, Pressable, SafeAreaView, Modal } from "react-native"
 import { ArrowLeft, CheckCircle, MoreHorizontal } from "react-native-feather"
 import { useState } from "react"
 import { useRouter } from "expo-router"
@@ -36,6 +36,7 @@ export default function JournalScreen() {
   ])
 
   const saveButtonScale = useSharedValue(1)
+  const [menuVisible, setMenuVisible] = useState(false)
 
   const handleSavePress = () => {
     saveButtonScale.value = withSequence(
@@ -48,10 +49,8 @@ export default function JournalScreen() {
     transform: [{ scale: saveButtonScale.value }],
   }))
 
-  const [menuVisible, setMenuVisible] = useState(false)
-  const handleMenuOption = (option) => {
+  const handleMenuOption = (option: string) => {
     setMenuVisible(false)
-    // Add logic for each option here
     if (option === 'Edit') {
       // handle edit
     } else if (option === 'Delete') {
@@ -65,64 +64,16 @@ export default function JournalScreen() {
         {/* Header */}
         <Animated.View 
           entering={FadeIn.duration(500)}
-          className="flex-row justify-between items-center mb-10"
+          className="flex-row justify-between items-center mb-10 relative z-50"
         >
           <Pressable onPress={() => router.back()}> 
             <ArrowLeft color="#E5E5E5" />
           </Pressable>
           <Text className="text-2xl font-bold text-[#E5E5E5] flex-1 text-center">Daily Note</Text>
-          <View style={{ position: 'relative' }}>
-            <Pressable onPress={() => setMenuVisible((v) => !v)}>
-              <MoreHorizontal color="#E5E5E5" />
-            </Pressable>
-            {menuVisible && (
-              <>
-                {/* Overlay to close menu when clicking outside */}
-                <Pressable
-                  onPress={() => setMenuVisible(false)}
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    width: '200vw',
-                    height: '200vh',
-                    backgroundColor: 'rgba(0,0,0,0.01)',
-                    zIndex: 19,
-                  }}
-                />
-                <View
-                  style={{
-                    position: 'absolute',
-                    top: 30,
-                    right: 0,
-                    zIndex: 20,
-                    backgroundColor: '#000',
-                    borderRadius: 12,
-                    borderWidth: 1,
-                    borderColor: '#2A2A2A',
-                    minWidth: 130,
-                    shadowColor: '#000',
-                    shadowOpacity: 0.4,
-                    shadowRadius: 16,
-                    shadowOffset: { width: 0, height: 8 },
-                    elevation: 30,
-                  }}
-                >
-                  <Pressable onPress={() => handleMenuOption('Edit')} style={{ padding: 14 }}>
-                    <Text style={{ color: '#E5E5E5', fontSize: 16 }}>Edit</Text>
-                  </Pressable>
-                  <Pressable onPress={() => handleMenuOption('Delete')} style={{ padding: 14 }}>
-                    <Text style={{ color: '#E57373', fontSize: 16 }}>Delete</Text>
-                  </Pressable>
-                  <Pressable onPress={() => setMenuVisible(false)} style={{ padding: 14 }}>
-                    <Text style={{ color: '#9A9A9A', fontSize: 16 }}>Cancel</Text>
-                  </Pressable>
-                </View>
-              </>
-            )}
-          </View>
+          
+          <Pressable onPress={() => setMenuVisible(true)}>
+            <MoreHorizontal color="#E5E5E5" />
+          </Pressable>
         </Animated.View>
 
         <View className="flex-1 justify-between gap-9">
@@ -197,6 +148,40 @@ export default function JournalScreen() {
           </View>
         </View>
       </ScrollView>
+
+      {/* Menu Modal with proper z-index */}
+      <Modal
+        visible={menuVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setMenuVisible(false)}
+      >
+        <Pressable 
+          className="flex-1 bg-black/50"
+          onPress={() => setMenuVisible(false)}
+        >
+          <View className="absolute top-16 right-6 bg-[#1A1A1A] rounded-2xl border border-[#2A2A2A] min-w-[160px] shadow-2xl">
+            <Pressable 
+              onPress={() => handleMenuOption('Edit')}
+              className="px-5 py-4 border-b border-[#2A2A2A] active:bg-[#2A2A2A]"
+            >
+              <Text className="text-white text-base">Edit</Text>
+            </Pressable>
+            <Pressable 
+              onPress={() => handleMenuOption('Delete')}
+              className="px-5 py-4 border-b border-[#2A2A2A] active:bg-[#2A2A2A]"
+            >
+              <Text className="text-red-400 text-base">Delete</Text>
+            </Pressable>
+            <Pressable 
+              onPress={() => setMenuVisible(false)}
+              className="px-5 py-4 active:bg-[#2A2A2A]"
+            >
+              <Text className="text-[#9A9A9A] text-base">Cancel</Text>
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
     </SafeAreaView>
   )
 }
