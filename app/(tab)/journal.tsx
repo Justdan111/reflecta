@@ -48,6 +48,17 @@ export default function JournalScreen() {
     transform: [{ scale: saveButtonScale.value }],
   }))
 
+  const [menuVisible, setMenuVisible] = useState(false)
+  const handleMenuOption = (option) => {
+    setMenuVisible(false)
+    // Add logic for each option here
+    if (option === 'Edit') {
+      // handle edit
+    } else if (option === 'Delete') {
+      // handle delete
+    }
+  }
+
   return (
     <SafeAreaView className="flex-1 bg-[#121212]">
       <ScrollView className="flex-1 px-6 py-4">
@@ -60,9 +71,24 @@ export default function JournalScreen() {
             <ArrowLeft color="#E5E5E5" />
           </Pressable>
           <Text className="text-2xl font-bold text-[#E5E5E5] flex-1 text-center">Daily Note</Text>
-          <Pressable onPress={() => {/* open menu logic here */}}>
-            <MoreHorizontal color="#E5E5E5" />
-          </Pressable>
+          <View>
+            <Pressable onPress={() => setMenuVisible(true)}>
+              <MoreHorizontal color="#E5E5E5" />
+            </Pressable>
+            {menuVisible && (
+              <View style={{ position: 'absolute', top: 30, right: 0, zIndex: 10, backgroundColor: '#232323', borderRadius: 10, borderWidth: 1, borderColor: '#2A2A2A', minWidth: 120, shadowColor: '#000', shadowOpacity: 0.2, shadowRadius: 8, elevation: 5 }}>
+                <Pressable onPress={() => handleMenuOption('Edit')} style={{ padding: 12 }}>
+                  <Text style={{ color: '#E5E5E5', fontSize: 16 }}>Edit</Text>
+                </Pressable>
+                <Pressable onPress={() => handleMenuOption('Delete')} style={{ padding: 12 }}>
+                  <Text style={{ color: '#E57373', fontSize: 16 }}>Delete</Text>
+                </Pressable>
+                <Pressable onPress={() => setMenuVisible(false)} style={{ padding: 12 }}>
+                  <Text style={{ color: '#9A9A9A', fontSize: 16 }}>Cancel</Text>
+                </Pressable>
+              </View>
+            )}
+          </View>
         </Animated.View>
 
         <View className="flex-1 justify-between gap-9">
