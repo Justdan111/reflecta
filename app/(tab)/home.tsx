@@ -11,6 +11,7 @@ import Animated, {
   withSpring,
   withSequence,
   withTiming,
+  SharedValue,
 } from "react-native-reanimated"
 
 const MOODS = [
@@ -54,7 +55,7 @@ export default function HomeScreen() {
   }))
 
   // Custom hook to create animated style for a given scale
-  function useMoodAnimatedStyles(scales: Animated.SharedValue<number>[]) {
+  function useMoodAnimatedStyles(scales: SharedValue<number>[]) {
     return scales.map((scale) =>
       useAnimatedStyle(() => ({
         transform: [{ scale: scale.value }],
