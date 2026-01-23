@@ -54,16 +54,14 @@ export default function HomeScreen() {
     transform: [{ scale: buttonScale.value }],
   }))
 
-  // Custom hook to create animated style for a given scale
-  function useMoodAnimatedStyles(scales: SharedValue<number>[]) {
-    return scales.map((scale) =>
-      useAnimatedStyle(() => ({
-        transform: [{ scale: scale.value }],
-      }))
-    )
-  }
-
-  const moodAnimatedStyles = useMoodAnimatedStyles(moodScales)
+  // Create animated styles for each mood at the top level
+  const moodAnimatedStyles = [
+    useAnimatedStyle(() => ({ transform: [{ scale: moodScales[0].value }] })),
+    useAnimatedStyle(() => ({ transform: [{ scale: moodScales[1].value }] })),
+    useAnimatedStyle(() => ({ transform: [{ scale: moodScales[2].value }] })),
+    useAnimatedStyle(() => ({ transform: [{ scale: moodScales[3].value }] })),
+    useAnimatedStyle(() => ({ transform: [{ scale: moodScales[4].value }] })),
+  ]
 
   return (
     <SafeAreaView className="flex-1 bg-[#121212]">
