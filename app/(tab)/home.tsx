@@ -29,6 +29,7 @@ export default function HomeScreen() {
   const [selectedMood, setSelectedMood] = useState<number | null>(null)
   
   const buttonScale = useSharedValue(1)
+  // Create a shared value for each mood at the top level
   const moodScales = MOODS.map(() => useSharedValue(1))
 
   const handleMoodPress = (index: number, moodId: number) => {
