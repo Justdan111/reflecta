@@ -42,7 +42,7 @@ export default function SignupScreen() {
     )
     // Add signup logic here
     setTimeout(() => {
-      router.push("/")
+      router.push("/home")
     }, 300)
   }
 
