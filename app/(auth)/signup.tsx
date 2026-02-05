@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Pressable, SafeAreaView, KeyboardAvoidingView, Platform, ScrollView } from "react-native"
+import { View, Text, TextInput, Pressable, SafeAreaView, KeyboardAvoidingView, Platform, ScrollView, Alert } from "react-native"
 import { useState } from "react"
 import { useRouter } from "expo-router"
 import Animated, {
@@ -11,6 +11,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated"
 import { Eye, EyeOff, ChevronLeft } from "react-native-feather"
+import { register } from "@/services/auth";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
@@ -26,13 +27,13 @@ export default function SignupScreen() {
   
   const signupButtonScale = useSharedValue(1)
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     if (!agreedToTerms) {
-      alert("Please accept the privacy policy and terms")
+      Alert.alert("Terms Required", "Please accept the privacy policy and terms to continue.")
       return
     }
     if (password !== confirmPassword) {
-      alert("Passwords don't match")
+      Alert.alert("Password Mismatch", "Passwords don't match. Please try again.")
       return
     }
     
@@ -40,11 +41,15 @@ export default function SignupScreen() {
       withTiming(0.97, { duration: 100 }),
       withSpring(1, { damping: 10, stiffness: 200 })
     )
-    // Add signup logic here
-    setTimeout(() => {
-      router.push("/home")
-    }, 300)
-  }
+    try {
+      await register(name, email, password);
+      Alert.alert("Account Created!", "Welcome to Reflecta. Your journey to better self-awareness begins now.", [
+        { text: "Get Started", onPress: () => router.replace("/home") }
+      ]);
+    } catch (err: any) {
+      Alert.alert("Signup Failed", err?.response?.data?.message || "Could not create account. Please try again.");
+    }
+  };
 
   const signupButtonAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: signupButtonScale.value }],

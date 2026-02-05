@@ -13,6 +13,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated"
 
+
 const MOODS = [
   { id: 1, emoji: "😔", label: "Sad", color: "#6D5D8B" },
   { id: 2, emoji: "😕", label: "Pensive", color: "#6D5D8B" },
@@ -46,7 +47,7 @@ export default function HomeScreen() {
         withTiming(0.95, { duration: 100 }),
         withTiming(1, { duration: 100 })
       )
-      setTimeout(() => router.push("/journal"), 200)
+      setTimeout(() => router.push({ pathname: "/journal", params: { mood: selectedMood } }), 200)
     }
   }
 

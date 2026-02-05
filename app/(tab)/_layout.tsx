@@ -1,9 +1,25 @@
-import { Tabs } from "expo-router"
-import React from "react"
+import { Redirect, Tabs } from "expo-router"
+import React, { useEffect, useState } from "react"
 import { Ionicons } from "@expo/vector-icons";
 import Animated, { useSharedValue, withTiming, useAnimatedStyle } from "react-native-reanimated";
+import * as SecureStore from "expo-secure-store";
 
 export default function TabsLayout() {
+
+  const [isAuth, setIsAuth] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    SecureStore.getItemAsync("token").then((token) => {
+      setIsAuth(!!token);
+    });
+  }, []);
+
+  if (isAuth === null) return null;
+
+  if (!isAuth) {
+    return <Redirect href="/(auth)/login" />;
+  }
+  
    // Animated tab icon component
   const AnimatedTabIcon: React.FC<{ name: keyof typeof Ionicons.glyphMap; color: string; size: number; focused: boolean }> = ({ name, color, size, focused }) => {
     const scale = useSharedValue(focused ? 1.2 : 1);

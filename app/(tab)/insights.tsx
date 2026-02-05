@@ -13,6 +13,7 @@ import Animated, {
 import { MoodDistribution } from "@/components/mood-distribution"
 import { StatCard } from "@/components/stat-card"
 import { ChevronLeft } from "react-native-feather"
+import {getInsights} from "@/services/reflection"
 
 
 export default function InsightsScreen() {

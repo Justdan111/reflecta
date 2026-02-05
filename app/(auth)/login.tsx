@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Pressable, SafeAreaView, KeyboardAvoidingView, Platform } from "react-native"
+import { View, Text, TextInput, Pressable, SafeAreaView, KeyboardAvoidingView, Platform, Alert } from "react-native"
 import { useState } from "react"
 import { useRouter } from "expo-router"
 import Animated, {
@@ -6,11 +6,9 @@ import Animated, {
   FadeInUp,
   useAnimatedStyle,
   useSharedValue,
-  withSequence,
-  withSpring,
-  withTiming,
 } from "react-native-reanimated"
 import { Eye, EyeOff } from "react-native-feather"
+  import { login } from "@/services/auth";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
@@ -19,19 +17,19 @@ export default function LoginScreen() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
+
   
   const loginButtonScale = useSharedValue(1)
-
-  const handleLogin = () => {
-    loginButtonScale.value = withSequence(
-      withTiming(0.97, { duration: 100 }),
-      withSpring(1, { damping: 10, stiffness: 200 })
-    )
-    // Add login logic here
-    setTimeout(() => {
-      router.push("/home")
-    }, 300)
-  }
+const handleLogin = async () => {
+    try {
+      await login(email, password);
+      Alert.alert("Welcome back!", "You have successfully logged in.", [
+        { text: "Continue", onPress: () => router.replace("/home") }
+      ]);
+    } catch (err: any) {
+      Alert.alert("Login Failed", err?.response?.data?.message || "Please check your credentials and try again.");
+    }
+  };
 
   const loginButtonAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: loginButtonScale.value }],
