@@ -1,4 +1,3 @@
-
 import { View, Text,  ScrollView, Pressable, SafeAreaView } from "react-native"
 import { useRouter } from "expo-router"
 import { X, HelpCircle } from "react-native-feather"
