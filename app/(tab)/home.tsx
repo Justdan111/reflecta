@@ -11,7 +11,6 @@ import Animated, {
   withSpring,
   withSequence,
   withTiming,
-  SharedValue,
 } from "react-native-reanimated"
 
 const MOODS = [
