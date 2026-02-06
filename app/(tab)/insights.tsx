@@ -1,6 +1,7 @@
 
-import { View, Text, ScrollView, Pressable, SafeAreaView } from "react-native"
+import { View, Text, ScrollView, Pressable, SafeAreaView, ActivityIndicator } from "react-native"
 import { useRouter } from "expo-router"
+import { useState, useEffect, useCallback } from "react"
 
 import Animated, {
   FadeIn,
@@ -12,13 +13,66 @@ import Animated, {
 } from "react-native-reanimated"
 import { MoodDistribution } from "@/components/mood-distribution"
 import { StatCard } from "@/components/stat-card"
-import { ChevronLeft } from "react-native-feather"
-import {getInsights} from "@/services/reflection"
+import { ChevronLeft, RefreshCw } from "react-native-feather"
+import { getInsights } from "@/services/reflection"
 
+interface InsightsData {
+  moodDistribution?: { day: string; value: number; color: string }[]
+  moodUplift?: {
+    value: string
+    title: string
+    description: string
+  }
+  aiInsight?: string
+}
 
 export default function InsightsScreen() {
   const router = useRouter()
+  const [insights, setInsights] = useState<InsightsData | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
+  const fetchInsights = useCallback(async () => {
+    setIsLoading(true)
+    setError(null)
+    try {
+      const data = await getInsights()
+      setInsights(data)
+    } catch (err: any) {
+      setError(err?.response?.data?.message || "Failed to load insights")
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchInsights()
+  }, [fetchInsights])
+
+  if (isLoading) {
+    return (
+      <SafeAreaView className="flex-1 bg-[#121212] justify-center items-center">
+        <ActivityIndicator size="large" color="#6D5D8B" />
+        <Text className="text-[#9A9A9A] mt-4">Loading insights...</Text>
+      </SafeAreaView>
+    )
+  }
+
+  if (error) {
+    return (
+      <SafeAreaView className="flex-1 bg-[#121212] justify-center items-center px-6">
+        <Text className="text-[#E5E5E5] text-lg mb-2">Unable to load insights</Text>
+        <Text className="text-[#9A9A9A] text-center mb-6">{error}</Text>
+        <Pressable 
+          onPress={fetchInsights}
+          className="bg-[#6D5D8B] px-6 py-3 rounded-xl flex-row items-center gap-2"
+        >
+          <RefreshCw color="#fff" width={18} height={18} />
+          <Text className="text-white font-semibold">Retry</Text>
+        </Pressable>
+      </SafeAreaView>
+    )
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-[#121212]">
@@ -55,7 +109,7 @@ export default function InsightsScreen() {
         </Animated.Text>
         
         <Animated.View entering={FadeInDown.duration(700).delay(300)}>
-          <MoodDistribution  />
+          <MoodDistribution moods={insights?.moodDistribution} />
         </Animated.View>
          </View>
 
@@ -69,11 +123,11 @@ export default function InsightsScreen() {
         </Animated.Text>
 
         <StatCard
-            value="+24%"
+            value={insights?.moodUplift?.value || "+24%"}
             label="MOOD UPLIFT"
             icon="🏃"
-            title="Exercise correlates with higher mood"
-            description="On days you logged physical activity, your baseline mood was significantly higher than inactive days."
+            title={insights?.moodUplift?.title || "Exercise correlates with higher mood"}
+            description={insights?.moodUplift?.description || "On days you logged physical activity, your baseline mood was significantly higher than inactive days."}
             buttonText="View Details"
               onPress={() => router.push("/weekly")}
                 />
@@ -102,7 +156,7 @@ export default function InsightsScreen() {
                   entering={FadeInRight.duration(600).delay(800)}
                   className="text-[#E5E5E5] italic text-lg font-medium"
                 >
-                  &quot;Do these patterns resonate with you today?&quot;
+                  &quot;{insights?.aiInsight || "Do these patterns resonate with you today?"}&quot;
                 </Animated.Text>
                
               </View>

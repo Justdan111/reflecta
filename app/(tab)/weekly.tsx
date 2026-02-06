@@ -1,6 +1,7 @@
-import { View, Text, ScrollView,  Pressable, SafeAreaView } from "react-native"
-import { ChevronLeft, Share2 } from "react-native-feather"
+import { View, Text, ScrollView, Pressable, SafeAreaView, ActivityIndicator } from "react-native"
+import { ChevronLeft, Share2, RefreshCw } from "react-native-feather"
 import { useRouter } from "expo-router"
+import { useState, useEffect, useCallback } from "react"
 import { StatsCard } from "@/components/stats-card"
 import { MoodChart } from "@/components/mood-chart"
 import Animated, {
@@ -12,23 +13,44 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated"
+import { getWeeklySummary } from "@/services/reflection"
 
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
-const WEEKLY_DATA = [
-  { day: "MON", mood: 2.5 },
-  { day: "TUE", mood: 3.2 },
-  { day: "WED", mood: 3.8 },
-  { day: "THU", mood: 3.5 },
-  { day: "FRI", mood: 2.8 },
-  { day: "SAT", mood: 3.0 },
-  { day: "SUN", mood: 4.5 },
-]
+interface WeeklySummaryData {
+  weeklyData?: { day: string; mood: number }[]
+  dateRange?: string
+  avgMood?: string
+  topEmotion?: string
+  reflections?: string
+  streak?: string
+  insight?: string
+}
 
 export default function WeeklyScreen() {
   const router = useRouter()
   const exportButtonScale = useSharedValue(1)
+  const [summary, setSummary] = useState<WeeklySummaryData | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  const fetchWeeklySummary = useCallback(async () => {
+    setIsLoading(true)
+    setError(null)
+    try {
+      const data = await getWeeklySummary()
+      setSummary(data)
+    } catch (err: any) {
+      setError(err?.response?.data?.message || "Failed to load weekly summary")
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchWeeklySummary()
+  }, [fetchWeeklySummary])
 
   const handleExportPress = () => {
     exportButtonScale.value = withSequence(
@@ -40,6 +62,42 @@ export default function WeeklyScreen() {
   const exportButtonAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: exportButtonScale.value }],
   }))
+
+  if (isLoading) {
+    return (
+      <SafeAreaView className="flex-1 bg-[#121212] justify-center items-center">
+        <ActivityIndicator size="large" color="#6D5D8B" />
+        <Text className="text-[#9A9A9A] mt-4">Loading weekly summary...</Text>
+      </SafeAreaView>
+    )
+  }
+
+  if (error) {
+    return (
+      <SafeAreaView className="flex-1 bg-[#121212] justify-center items-center px-6">
+        <Text className="text-[#E5E5E5] text-lg mb-2">Unable to load summary</Text>
+        <Text className="text-[#9A9A9A] text-center mb-6">{error}</Text>
+        <Pressable 
+          onPress={fetchWeeklySummary}
+          className="bg-[#6D5D8B] px-6 py-3 rounded-xl flex-row items-center gap-2"
+        >
+          <RefreshCw color="#fff" width={18} height={18} />
+          <Text className="text-white font-semibold">Retry</Text>
+        </Pressable>
+      </SafeAreaView>
+    )
+  }
+
+  // Default data if API returns empty
+  const weeklyData = summary?.weeklyData || [
+    { day: "MON", mood: 2.5 },
+    { day: "TUE", mood: 3.2 },
+    { day: "WED", mood: 3.8 },
+    { day: "THU", mood: 3.5 },
+    { day: "FRI", mood: 2.8 },
+    { day: "SAT", mood: 3.0 },
+    { day: "SUN", mood: 4.5 },
+  ]
 
   return (
     <SafeAreaView className="flex-1 bg-[#121212]">
@@ -65,28 +123,28 @@ export default function WeeklyScreen() {
           <Text className="text-white text-3xl font-bold mb-2">
             Your week at a glance
           </Text>
-          <Text className="text-[#666666] text-sm mb-6">Feb 12 — Feb 18</Text>
+          <Text className="text-[#666666] text-sm mb-6">{summary?.dateRange || "This Week"}</Text>
         </Animated.View>
 
         {/* Mood Chart */}
-        <MoodChart weeklyData={WEEKLY_DATA} />
+        <MoodChart weeklyData={weeklyData} />
 
         {/* Stats Grid */}
         <View className="gap-3 mb-8">
           <View className="flex-row gap-3">
             <View className="flex-1">
-              <StatsCard icon="😊" label="AVG MOOD" value="Positive" />
+              <StatsCard icon="😊" label="AVG MOOD" value={summary?.avgMood || "Positive"} />
             </View>
             <View className="flex-1">
-              <StatsCard icon="🧘" label="TOP EMOTION" value="Calm" />
+              <StatsCard icon="🧘" label="TOP EMOTION" value={summary?.topEmotion || "Calm"} />
             </View>
           </View>
           <View className="flex-row gap-3">
             <View className="flex-1">
-              <StatsCard icon="📝" label="REFLECTIONS" value="14 Posts" />
+              <StatsCard icon="📝" label="REFLECTIONS" value={summary?.reflections || "0 Posts"} />
             </View>
             <View className="flex-1">
-              <StatsCard icon="⚡" label="STREAK" value="8 Days" />
+              <StatsCard icon="⚡" label="STREAK" value={summary?.streak || "0 Days"} />
             </View>
           </View>
         </View>
@@ -96,8 +154,7 @@ export default function WeeklyScreen() {
           <Text className="text-white text-xl font-bold mb-4">Insights</Text>
           <View className="bg-[#1E1E1E] rounded-2xl p-5 border border-[#2A2A2A] mb-6">
             <Text className="text-[#9A9A9A] italic text-sm leading-6">
-              &quot;You felt more creative mid-week, often associated with your morning journaling habit. Notice how your calm
-              state on Sunday correlates with your digital detox.&quot;
+              &quot;{summary?.insight || "Keep reflecting to unlock personalized insights about your mood patterns."}&quot;
             </Text>
           </View>
         </Animated.View>
