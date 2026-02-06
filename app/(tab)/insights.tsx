@@ -74,6 +74,9 @@ export default function InsightsScreen() {
     )
   }
 
+  const hasMoodData = insights?.moodDistribution && insights.moodDistribution.length > 0
+  const hasMoodUplift = insights?.moodUplift?.title
+
   return (
     <SafeAreaView className="flex-1 bg-[#121212]">
       <ScrollView className="flex-1 px-6 py-4 gap-4">
@@ -109,7 +112,19 @@ export default function InsightsScreen() {
         </Animated.Text>
         
         <Animated.View entering={FadeInDown.duration(700).delay(300)}>
-          <MoodDistribution moods={insights?.moodDistribution} />
+          {hasMoodData ? (
+            <MoodDistribution moods={insights?.moodDistribution} />
+          ) : (
+            <View className="bg-[#1E1E1E] rounded-2xl p-8 border border-[#2A2A2A] items-center">
+              <Text className="text-5xl mb-4">📈</Text>
+              <Text className="text-[#E5E5E5] text-lg font-semibold mb-2 text-center">
+                No mood patterns yet
+              </Text>
+              <Text className="text-[#9A9A9A] text-sm text-center leading-6">
+                Check in for a few days to see your weekly mood distribution.
+              </Text>
+            </View>
+          )}
         </Animated.View>
          </View>
 
@@ -122,15 +137,30 @@ export default function InsightsScreen() {
           Activity Insights
         </Animated.Text>
 
-        <StatCard
-            value={insights?.moodUplift?.value || "+24%"}
+        {hasMoodUplift ? (
+          <StatCard
+            value={insights?.moodUplift?.value || "—"}
             label="MOOD UPLIFT"
             icon="🏃"
-            title={insights?.moodUplift?.title || "Exercise correlates with higher mood"}
-            description={insights?.moodUplift?.description || "On days you logged physical activity, your baseline mood was significantly higher than inactive days."}
+            title={insights?.moodUplift?.title || ""}
+            description={insights?.moodUplift?.description || ""}
             buttonText="View Details"
-              onPress={() => router.push("/weekly")}
-                />
+            onPress={() => router.push("/weekly")}
+          />
+        ) : (
+          <Animated.View 
+            entering={FadeInUp.duration(600).delay(400)}
+            className="bg-[#1E1E1E] rounded-2xl p-6 border border-[#2A2A2A] items-center"
+          >
+            <Text className="text-4xl mb-3">🔍</Text>
+            <Text className="text-[#E5E5E5] text-base font-semibold mb-2 text-center">
+              Insights coming soon
+            </Text>
+            <Text className="text-[#9A9A9A] text-sm text-center leading-6">
+              Continue reflecting to unlock personalized activity insights.
+            </Text>
+          </Animated.View>
+        )}
           </View>
      
 
@@ -152,12 +182,21 @@ export default function InsightsScreen() {
                 💡
               </Animated.Text>
               <View className="flex-1">
-                <Animated.Text 
-                  entering={FadeInRight.duration(600).delay(800)}
-                  className="text-[#E5E5E5] italic text-lg font-medium"
-                >
-                  &quot;{insights?.aiInsight || "Do these patterns resonate with you today?"}&quot;
-                </Animated.Text>
+                {insights?.aiInsight ? (
+                  <Animated.Text 
+                    entering={FadeInRight.duration(600).delay(800)}
+                    className="text-[#E5E5E5] italic text-lg font-medium"
+                  >
+                    &quot;{insights.aiInsight}&quot;
+                  </Animated.Text>
+                ) : (
+                  <Animated.Text 
+                    entering={FadeInRight.duration(600).delay(800)}
+                    className="text-[#666666] italic text-base"
+                  >
+                    Your personalized AI insights will appear here as you continue your reflection journey.
+                  </Animated.Text>
+                )}
                
               </View>
             </View>

@@ -24,20 +24,6 @@ export default function JournalScreen() {
   const { mood } = useLocalSearchParams<{ mood: string }>()
   const [noteText, setNoteText] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const [entries, setEntries] = useState([
-    {
-      id: 1,
-      date: "Today",
-      mood: "Calm",
-      text: "Had a great morning session. Feeling peaceful and focused.",
-    },
-    {
-      id: 2,
-      date: "Yesterday",
-      mood: "Content",
-      text: "Productive day at work. Good conversations with team.",
-    },
-  ])
 
   const saveButtonScale = useSharedValue(1)
   const [menuVisible, setMenuVisible] = useState(false)
@@ -158,7 +144,7 @@ export default function JournalScreen() {
             </AnimatedPressable>
           </View>
 
-          {/* Previous Entries */}
+          {/* Previous Entries - Empty State */}
           <View>
             <Animated.Text 
               entering={SlideInRight.duration(600).delay(400)}
@@ -166,19 +152,18 @@ export default function JournalScreen() {
             >
               Recent Entries
             </Animated.Text>
-            {entries.map((entry, index) => (
-              <Animated.View 
-                key={entry.id}
-                entering={FadeInDown.duration(500).delay(500 + index * 100)}
-                className="bg-[#1E1E1E] rounded-xl p-4 mb-3 border border-[#2A2A2A]"
-              >
-                <View className="flex-row justify-between items-center mb-2">
-                  <Text className="text-sm text-[#9A9A9A]">{entry.date}</Text>
-                  <Text className="text-xs bg-[#2A2A2A] px-3 py-1 rounded-full text-[#C9A24D]">{entry.mood}</Text>
-                </View>
-                <Text className="text-[#E5E5E5] text-sm leading-6">{entry.text}</Text>
-              </Animated.View>
-            ))}
+            <Animated.View 
+              entering={FadeInDown.duration(500).delay(500)}
+              className="bg-[#1E1E1E] rounded-xl p-6 border border-[#2A2A2A] items-center"
+            >
+              <Text className="text-4xl mb-3">📝</Text>
+              <Text className="text-[#E5E5E5] text-base font-semibold mb-2 text-center">
+                No entries yet
+              </Text>
+              <Text className="text-[#9A9A9A] text-sm text-center leading-6">
+                Your saved reflections will appear here.
+              </Text>
+            </Animated.View>
           </View>
         </View>
       </ScrollView>

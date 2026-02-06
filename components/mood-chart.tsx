@@ -16,15 +16,22 @@ interface MoodChartProps {
 }
 
 export function MoodChart({ weeklyData, stability }: MoodChartProps) {
-  const WEEKLY_DATA = weeklyData || [
-    { day: "MON", mood: 2.5 },
-    { day: "TUE", mood: 3.2 },
-    { day: "WED", mood: 3.8 },
-    { day: "THU", mood: 3.5 },
-    { day: "FRI", mood: 2.8 },
-    { day: "SAT", mood: 3.0 },
-    { day: "SUN", mood: 4.5 },
-  ]
+  // Return empty state if no data
+  if (!weeklyData || weeklyData.length === 0) {
+    return (
+      <View className="bg-[#1E1E1E] rounded-2xl p-8 border border-[#2A2A2A] mb-6 items-center">
+        <Text className="text-5xl mb-4">📊</Text>
+        <Text className="text-[#E5E5E5] text-lg font-semibold mb-2 text-center">
+          No mood data yet
+        </Text>
+        <Text className="text-[#9A9A9A] text-sm text-center leading-6">
+          Start checking in daily to see your mood trends visualized here.
+        </Text>
+      </View>
+    )
+  }
+
+  const WEEKLY_DATA = weeklyData
 
   const maxMood = 5
   const chartHeight = 240

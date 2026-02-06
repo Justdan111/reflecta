@@ -24,15 +24,22 @@ interface MoodDistributionProps {
 export function MoodDistribution({ moods, onExplore }: MoodDistributionProps) {
     const router = useRouter()
     
-  const MOODS = moods || [
-    { day: "Mon", value: 65, color: "#6D5D8B" },
-    { day: "Tue", value: 80, color: "#6D5D8B" },
-    { day: "Wed", value: 50, color: "#6D5D8B" },
-    { day: "Thu", value: 70, color: "#6D5D8B" },
-    { day: "Fri", value: 45, color: "#C9A24D" },
-    { day: "Sat", value: 90, color: "#6D5D8B" },
-    { day: "Sun", value: 85, color: "#6D5D8B" },
-  ]
+  // Return empty state if no data
+  if (!moods || moods.length === 0) {
+    return (
+      <View className="bg-[#1E1E1E] rounded-2xl p-8 border border-[#2A2A2A] items-center">
+        <Text className="text-5xl mb-4">📈</Text>
+        <Text className="text-[#E5E5E5] text-lg font-semibold mb-2 text-center">
+          No mood patterns yet
+        </Text>
+        <Text className="text-[#9A9A9A] text-sm text-center leading-6">
+          Check in for a few days to see your weekly mood distribution.
+        </Text>
+      </View>
+    )
+  }
+
+  const MOODS = moods
 
   const maxValue = Math.max(...MOODS.map(m => m.value))
 

@@ -88,16 +88,8 @@ export default function WeeklyScreen() {
     )
   }
 
-  // Default data if API returns empty
-  const weeklyData = summary?.weeklyData || [
-    { day: "MON", mood: 2.5 },
-    { day: "TUE", mood: 3.2 },
-    { day: "WED", mood: 3.8 },
-    { day: "THU", mood: 3.5 },
-    { day: "FRI", mood: 2.8 },
-    { day: "SAT", mood: 3.0 },
-    { day: "SUN", mood: 4.5 },
-  ]
+  const weeklyData = summary?.weeklyData
+  const hasData = weeklyData && weeklyData.length > 0
 
   return (
     <SafeAreaView className="flex-1 bg-[#121212]">
@@ -126,17 +118,32 @@ export default function WeeklyScreen() {
           <Text className="text-[#666666] text-sm mb-6">{summary?.dateRange || "This Week"}</Text>
         </Animated.View>
 
-        {/* Mood Chart */}
-        <MoodChart weeklyData={weeklyData} />
+        {/* Mood Chart or Empty State */}
+        {hasData ? (
+          <MoodChart weeklyData={weeklyData} />
+        ) : (
+          <Animated.View 
+            entering={FadeInDown.duration(600).delay(200)}
+            className="bg-[#1E1E1E] rounded-2xl p-8 border border-[#2A2A2A] mb-6 items-center"
+          >
+            <Text className="text-5xl mb-4">📊</Text>
+            <Text className="text-[#E5E5E5] text-lg font-semibold mb-2 text-center">
+              No mood data yet
+            </Text>
+            <Text className="text-[#9A9A9A] text-sm text-center leading-6">
+              Start checking in daily to see your mood trends visualized here.
+            </Text>
+          </Animated.View>
+        )}
 
         {/* Stats Grid */}
         <View className="gap-3 mb-8">
           <View className="flex-row gap-3">
             <View className="flex-1">
-              <StatsCard icon="😊" label="AVG MOOD" value={summary?.avgMood || "Positive"} />
+              <StatsCard icon="😊" label="AVG MOOD" value={summary?.avgMood || "—"} />
             </View>
             <View className="flex-1">
-              <StatsCard icon="🧘" label="TOP EMOTION" value={summary?.topEmotion || "Calm"} />
+              <StatsCard icon="🧘" label="TOP EMOTION" value={summary?.topEmotion || "—"} />
             </View>
           </View>
           <View className="flex-row gap-3">
@@ -153,9 +160,17 @@ export default function WeeklyScreen() {
         <Animated.View entering={FadeInDown.duration(600).delay(300)}>
           <Text className="text-white text-xl font-bold mb-4">Insights</Text>
           <View className="bg-[#1E1E1E] rounded-2xl p-5 border border-[#2A2A2A] mb-6">
-            <Text className="text-[#9A9A9A] italic text-sm leading-6">
-              &quot;{summary?.insight || "Keep reflecting to unlock personalized insights about your mood patterns."}&quot;
-            </Text>
+            {summary?.insight ? (
+              <Text className="text-[#9A9A9A] italic text-sm leading-6">
+                &quot;{summary.insight}&quot;
+              </Text>
+            ) : (
+              <View className="items-center py-2">
+                <Text className="text-[#666666] text-sm text-center leading-6">
+                  Keep reflecting to unlock personalized insights about your mood patterns.
+                </Text>
+              </View>
+            )}
           </View>
         </Animated.View>
 

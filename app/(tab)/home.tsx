@@ -1,6 +1,6 @@
-import { View, Text, ScrollView, Pressable, SafeAreaView } from "react-native"
+import { View, Text, ScrollView, Pressable, SafeAreaView, ActivityIndicator } from "react-native"
 import { useRouter } from "expo-router"
-import { useState } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Bookmark, Settings as SettingsIcon } from "react-native-feather"
 import Animated, {
   FadeIn,
@@ -12,6 +12,7 @@ import Animated, {
   withSequence,
   withTiming,
 } from "react-native-reanimated"
+import { getWeeklySummary, WeeklySummary } from "@/services/reflection"
 
 
 const MOODS = [
@@ -27,10 +28,34 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 export default function HomeScreen() {
   const router = useRouter()
   const [selectedMood, setSelectedMood] = useState<number | null>(null)
+  const [summary, setSummary] = useState<WeeklySummary | null>(null)
+  const [isLoadingStats, setIsLoadingStats] = useState(true)
   
   const buttonScale = useSharedValue(1)
-  // Create a shared value for each mood at the top level
-  const moodScales = MOODS.map(() => useSharedValue(1))
+  // Create shared values for each mood
+  const moodScale0 = useSharedValue(1)
+  const moodScale1 = useSharedValue(1)
+  const moodScale2 = useSharedValue(1)
+  const moodScale3 = useSharedValue(1)
+  const moodScale4 = useSharedValue(1)
+  const moodScales = [moodScale0, moodScale1, moodScale2, moodScale3, moodScale4]
+
+  const fetchStats = useCallback(async () => {
+    setIsLoadingStats(true)
+    try {
+      const data = await getWeeklySummary()
+      setSummary(data)
+    } catch {
+      // Silently fail - will show empty state
+      setSummary(null)
+    } finally {
+      setIsLoadingStats(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchStats()
+  }, [fetchStats])
 
   const handleMoodPress = (index: number, moodId: number) => {
     setSelectedMood(moodId)
@@ -63,6 +88,19 @@ export default function HomeScreen() {
     useAnimatedStyle(() => ({ transform: [{ scale: moodScales[3].value }] })),
     useAnimatedStyle(() => ({ transform: [{ scale: moodScales[4].value }] })),
   ]
+
+  // Parse reflections count from string like "14 Posts"
+  const parseReflectionsCount = (str?: string): string => {
+    if (!str) return "0"
+    const match = str.match(/\d+/)
+    return match ? match[0] : "0"
+  }
+
+  // Parse streak from string like "8 Days"
+  const parseStreak = (str?: string): string => {
+    if (!str) return "0 Days"
+    return str
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-[#121212]">
@@ -153,7 +191,13 @@ export default function HomeScreen() {
                 className="bg-[#1E1E1E] rounded-xl p-4 border border-[#2A2A2A] flex-row justify-between items-center"
               >
                 <Text className="text-[#9A9A9A]">Reflections</Text>
-                <Text className="text-2xl font-bold text-[#E5E5E5]">14</Text>
+                {isLoadingStats ? (
+                  <ActivityIndicator size="small" color="#6D5D8B" />
+                ) : (
+                  <Text className="text-2xl font-bold text-[#E5E5E5]">
+                    {parseReflectionsCount(summary?.reflections)}
+                  </Text>
+                )}
               </Animated.View>
               
               <Animated.View 
@@ -161,7 +205,13 @@ export default function HomeScreen() {
                 className="bg-[#1E1E1E] rounded-xl p-4 border border-[#2A2A2A] flex-row justify-between items-center"
               >
                 <Text className="text-[#9A9A9A]">Streak</Text>
-                <Text className="text-2xl font-bold text-[#C9A24D]">8 Days</Text>
+                {isLoadingStats ? (
+                  <ActivityIndicator size="small" color="#6D5D8B" />
+                ) : (
+                  <Text className="text-2xl font-bold text-[#C9A24D]">
+                    {parseStreak(summary?.streak)}
+                  </Text>
+                )}
               </Animated.View>
             </View>
           </Animated.View>
