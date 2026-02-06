@@ -42,6 +42,25 @@ export function MoodDistribution({ moods, onExplore }: MoodDistributionProps) {
   const MOODS = moods
 
   const maxValue = Math.max(...MOODS.map(m => m.value))
+  
+  // Find the day with the lowest mood
+  const lowestMood = MOODS.reduce((min, mood) => 
+    mood.value < min.value ? mood : min, MOODS[0]
+  )
+  
+  // Find the day with the highest mood
+  const highestMood = MOODS.reduce((max, mood) => 
+    mood.value > max.value ? mood : max, MOODS[0]
+  )
+
+  // Get full day name from abbreviation
+  const getDayName = (abbrev: string) => {
+    const days: Record<string, string> = {
+      'Mon': 'Mondays', 'Tue': 'Tuesdays', 'Wed': 'Wednesdays',
+      'Thu': 'Thursdays', 'Fri': 'Fridays', 'Sat': 'Saturdays', 'Sun': 'Sundays'
+    }
+    return days[abbrev] || abbrev
+  }
 
   return (
     <View className="bg-[#1E1E1E] rounded-2xl p-6 border border-[#2A2A2A]">
@@ -65,11 +84,11 @@ export function MoodDistribution({ moods, onExplore }: MoodDistributionProps) {
         <View className="flex-row items-center mb-3">
           <Text className="text-2xl mr-2">📅</Text>
           <Text className="text-[#E5E5E5] text-lg font-semibold">
-            Your mood is lowest on Mondays
+            Your mood is lowest on {getDayName(lowestMood.day)}
           </Text>
         </View>
         <Text className="text-[#9A9A9A] text-sm leading-6">
-          Based on your entries from the last 30 days. You tend to feel more drained following Sunday evenings.
+          Based on your entries, you tend to feel best on {getDayName(highestMood.day)} and more drained on {getDayName(lowestMood.day)}.
         </Text>
       </View>
 
