@@ -46,7 +46,6 @@ export default function HomeScreen() {
       const data = await getWeeklySummary()
       setSummary(data)
     } catch {
-      // Silently fail - will show empty state
       setSummary(null)
     } finally {
       setIsLoadingStats(false)

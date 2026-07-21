@@ -41,7 +41,7 @@ export default function JournalScreen() {
 
     setIsLoading(true)
     try {
-      const moodValue = mood ? parseInt(mood, 10) : 3 // Default to neutral if no mood
+      const moodValue = mood ? parseInt(mood, 10) : 3 // Default to neutral if no mood 
       await createReflection(moodValue, noteText.trim())
       Alert.alert("Success", "Your reflection has been saved!", [
         { text: "OK", onPress: () => router.back() }
@@ -61,9 +61,7 @@ export default function JournalScreen() {
   const handleMenuOption = (option: string) => {
     setMenuVisible(false)
     if (option === 'Edit') {
-      // handle edit
     } else if (option === 'Delete') {
-      // handle delete
     }
   }
 
@@ -168,7 +166,7 @@ export default function JournalScreen() {
         </View>
       </ScrollView>
 
-      {/* Menu Modal with proper z-index */}
+      {/* Menu Modal  */}
       <Modal
         visible={menuVisible}
         transparent={true}

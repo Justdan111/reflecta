@@ -1,51 +1,124 @@
-# Welcome to your Expo app 👋
+# Reflecta
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A privacy-focused mood journaling app for iOS and Android. Check in with how you're feeling each day, write a short reflection, and see your mood trends and insights over time.
 
-## Get started
+Built with **Expo** (React Native), **expo-router** for navigation, and **NativeWind** (Tailwind) for styling.
 
-1. Install dependencies
+---
 
-   ```bash
-   npm install
-   ```
+## What it does
 
-2. Start the app
+- **Daily check-in** — Pick a mood (1–5) and write a short note about your day.
+- **Journal** — Capture a reflection tied to the mood you selected.
+- **Weekly summary** — See your week at a glance: mood chart, average mood, top emotion, reflection count, and streak.
+- **Insights** — Mood distribution across the week plus an AI-generated insight.
+- **Settings** — Reminders, biometric lock, data export, and account options.
+- **Auth** — Email/password login and signup, with the session token stored securely on-device.
 
-   ```bash
-   npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Getting started
 
 ```bash
-npm run reset-project
+npm install       # install dependencies
+npm start         # start the Expo dev server
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Then open the app in one of:
 
-## Learn more
+- **iOS simulator** — `npm run ios`
+- **Android emulator** — `npm run android`
+- **Web** — `npm run web`
+- **Expo Go** — scan the QR code from `npm start`
 
-To learn more about developing your project with Expo, look at the following resources:
+### Backend
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+The app talks to a REST API. Set the URL in [lib/api.ts](lib/api.ts):
 
-## Join the community
+```ts
+const API_URL = "http://localhost:4000/api";
+```
 
-Join our community of developers creating universal apps.
+- iOS simulator: `localhost`
+- Android emulator: `10.0.2.2`
+- Physical device: your computer's local IP
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
-# reflecta
+The backend itself is **not** part of this repo — you need to run it separately.
+
+---
+
+## Project structure
+
+```
+app/                     Screens (file-based routing via expo-router)
+  _layout.tsx            Root stack: (auth) + (tab) groups
+  index.tsx              Entry — redirects based on auth state
+  (auth)/                Login & signup screens
+    login.tsx
+    signup.tsx
+  (tab)/                 Main tab navigation (requires auth)
+    home.tsx             Daily mood check-in + weekly stats
+    journal.tsx          Write & save a reflection
+    weekly.tsx           Weekly summary (hidden from tab bar)
+    insights.tsx         Mood distribution + AI insight
+    settings.tsx         Preferences & account
+components/              Reusable UI (charts, stat cards, mood selector)
+lib/api.ts               Axios client + auth token interceptors
+services/
+  auth.ts                login / register / logout / profile
+  reflection.ts          create reflection, weekly summary, insights
+assets/                  Icons & images
+```
+
+---
+
+## How it works
+
+### Navigation & auth
+
+- [app/index.tsx](app/index.tsx) checks for a stored token and redirects to either the login screen or the home tabs.
+- [app/(tab)/_layout.tsx](app/(tab)/_layout.tsx) guards the tab group — no token means a redirect back to login.
+- Screens live in route groups: `(auth)` for logged-out screens, `(tab)` for the main app.
+
+### API layer
+
+[lib/api.ts](lib/api.ts) creates a shared Axios instance with two interceptors:
+
+- **Request** — attaches the stored `Bearer` token to every call.
+- **Response** — on a `401`, clears the saved token and user (logging the user out).
+
+Tokens and user data are kept in the device keychain via `expo-secure-store`.
+
+### Services
+
+Screens call typed helper functions rather than Axios directly:
+
+| Function | Endpoint | Purpose |
+|---|---|---|
+| `login(email, password)` | `POST /auth/login` | Sign in, store token |
+| `register(name, email, password)` | `POST /auth/register` | Sign up, store token |
+| `getProfile()` | `GET /auth/profile` | Current user |
+| `createReflection(mood, note)` | `POST /reflections` | Save a check-in (mood 1–5, note ≤ 500 chars) |
+| `getWeeklySummary()` | `GET /reflections/weekly` | Weekly chart + stats |
+| `getInsights()` | `GET /reflections/insights` | Mood distribution + AI insight |
+
+---
+
+## Design notes
+
+- **Theme** — dark UI throughout. Background `#121212`, accent purple `#6D5D8B`, gold `#C9A24D`.
+- **Moods** — scored 1 (Sad) to 5 (Radiant), shown as emoji on the home screen.
+- **Animations** — `react-native-reanimated` powers entrance transitions and press feedback.
+- **Loading & empty states** — each data screen handles loading spinners, retry-on-error, and friendly empty states when there's no data yet.
+
+---
+
+## Tech stack
+
+- Expo SDK 54 / React Native 0.81 / React 19
+- expo-router (typed routes, React Compiler enabled)
+- NativeWind + Tailwind CSS
+- Axios for HTTP
+- expo-secure-store for token storage
+- react-native-reanimated for animations
+- react-native-feather & @expo/vector-icons for icons

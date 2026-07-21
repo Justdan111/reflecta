@@ -39,7 +39,6 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       await SecureStore.deleteItemAsync("token");
       await SecureStore.deleteItemAsync("user");
-      // You could emit an event here to trigger navigation to login
     }
 
     return Promise.reject(error);
