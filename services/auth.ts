@@ -50,6 +50,11 @@ export async function getProfile(): Promise<User> {
 }
 
 export async function logout(): Promise<void> {
+  // Revoke the token on the server; clear local session even if this fails
+  try {
+    await api.post("/auth/logout");
+  } catch {}
+
   await SecureStore.deleteItemAsync("token");
   await SecureStore.deleteItemAsync("user");
 }
