@@ -48,6 +48,12 @@ export default function JournalScreen() {
       ])
       setNoteText("")
     } catch (error: any) {
+      if (error?.response?.status === 401) {
+        Alert.alert("Session expired", "Please log in again.", [
+          { text: "OK", onPress: () => router.replace("/login") }
+        ])
+        return
+      }
       Alert.alert("Error", error?.response?.data?.message || "Failed to save reflection. Please try again.")
     } finally {
       setIsLoading(false)

@@ -1,6 +1,6 @@
-import { View, Text, ScrollView,  Pressable, Switch, SafeAreaView } from "react-native"
+import { View, Text, ScrollView,  Pressable, Switch, SafeAreaView, Alert } from "react-native"
 import { useState } from "react"
-import { ChevronLeft, ChevronRight, Trash2 } from "react-native-feather"
+import { ChevronLeft, ChevronRight, LogOut, Trash2 } from "react-native-feather"
 import { useRouter } from "expo-router"
 import Animated, {
   FadeIn,
@@ -11,6 +11,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated"
+import { logout } from "@/services/auth"
 
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
@@ -35,6 +36,20 @@ export default function SettingsScreen() {
       withTiming(0.97, { duration: 100 }),
       withSpring(1, { damping: 10, stiffness: 200 })
     )
+  }
+
+  const handleLogoutPress = () => {
+    Alert.alert("Log out", "Are you sure you want to log out?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Log Out",
+        style: "destructive",
+        onPress: async () => {
+          await logout()
+          router.replace("/login")
+        },
+      },
+    ])
   }
 
   const learnMoreAnimatedStyle = useAnimatedStyle(() => ({
@@ -177,6 +192,22 @@ export default function SettingsScreen() {
             <Pressable className="flex-row justify-between items-center px-5 py-4">
               <Text className="text-white text-base font-medium">Support</Text>
               <ChevronRight color="#666666"  />
+            </Pressable>
+          </View>
+        </Animated.View>
+
+        {/* Account Section */}
+        <Animated.View entering={FadeInDown.duration(600).delay(450)}>
+          <Text className="text-[#666666] text-xs font-semibold tracking-wider mb-3 ml-1">
+            ACCOUNT
+          </Text>
+          <View className="bg-[#1A1A1A] rounded-2xl border border-[#2A2A2A] mb-6 overflow-hidden">
+            <Pressable
+              onPress={handleLogoutPress}
+              className="flex-row justify-between items-center px-5 py-4"
+            >
+              <Text className="text-[#EF4444] text-base font-medium">Log Out</Text>
+              <LogOut color="#EF4444" />
             </Pressable>
           </View>
         </Animated.View>
